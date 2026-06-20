@@ -1,0 +1,17 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">رزروها</span><h1 class="section-title">مدیریت رزروها</h1></div><a class="btn btn-soft" href="{% url 'accounts:calendar' %}">نمای تقویم</a></div>
+<div class="card" style="margin-bottom:16px">
+  <form method="get" style="display:flex;gap:12px;align-items:end;flex-wrap:wrap">
+    <div><label>فیلتر وضعیت</label><select name="status"><option value="">همه</option>{% for value,label in statuses %}<option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+    <button class="btn btn-soft" type="submit">اعمال فیلتر</button>
+  </form>
+</div>
+<div class="table-wrap">
+  <table><thead><tr><th>کد</th><th>مشتری</th><th>موبایل</th><th>خدمت</th><th>کارمند</th><th>زمان</th><th>پرداخت</th><th>وضعیت</th><th></th></tr></thead><tbody>
+    {% for booking in bookings %}
+    <tr><td>{{ booking.tracking_code }}</td><td>{{ booking.customer_name }}</td><td>{{ booking.customer_phone }}</td><td>{{ booking.service.title }}</td><td>{{ booking.staff.full_name|default:'—' }}</td><td>{{ booking.starts_at|date:'Y/m/d H:i' }}</td><td>{% if booking.is_paid %}پرداخت شده{% else %}پرداخت نشده{% endif %}</td><td><span class="status {{ booking.status }}">{{ booking.get_status_display }}</span></td><td><a class="btn btn-soft" href="{% url 'accounts:booking_update' booking.id %}">ویرایش</a></td></tr>
+    {% empty %}<tr><td colspan="9">رزروی وجود ندارد.</td></tr>{% endfor %}
+  </tbody></table>
+</div>
+{% endblock %}

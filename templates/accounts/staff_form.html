@@ -1,0 +1,14 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">کارمند</span><h1 class="section-title">{{ title }}</h1></div></div>
+<form class="form-card" method="post">
+  {% csrf_token %}
+  <div class="form-grid">
+    {% for field in form %}
+      <div>{{ field.label_tag }}{{ field }}{{ field.errors }}{% if field.help_text %}<div class="helptext">{{ field.help_text }}</div>{% endif %}</div>
+    {% endfor %}
+  </div>
+  <button class="btn btn-primary" style="margin-top:18px" type="submit">ذخیره</button>
+  <a class="btn btn-soft" style="margin-top:18px" href="{% url 'accounts:staff' %}">بازگشت</a>
+</form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'dashboard_base.html' %}
+{% load nobtek_tags %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">خدمات</span><h1 class="section-title">خدمات قابل رزرو</h1>{% if plan %}<p class="section-desc">پلن فعلی اجازه ثبت {{ plan.max_services|fa_number }} خدمت را می‌دهد. پرداخت آنلاین: {% if plan.online_payment %}فعال{% else %}غیرفعال{% endif %}، بیعانه: {% if plan.deposit_payment %}فعال{% else %}غیرفعال{% endif %}</p>{% endif %}</div><a class="btn btn-primary" href="{% url 'accounts:service_create' %}">افزودن خدمت</a></div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>نام خدمت</th><th>ارائه‌دهنده</th><th>قیمت</th><th>مدت‌زمان</th><th>فاصله بعد رزرو</th><th>ظرفیت</th><th>پرداخت</th><th>وضعیت</th><th></th></tr></thead>
+    <tbody>
+      {% for service in services %}
+      <tr>
+        <td>{{ service.title }}</td><td>{{ service.staff.full_name|default:'—' }}</td><td>{{ service.price|toman }}</td><td>{{ service.duration_minutes|duration_label }}</td><td>{{ service.buffer_minutes|duration_label }}</td><td>{{ service.capacity|fa_number }}</td><td>{{ service.get_payment_mode_display }}</td><td>{% if service.is_active %}فعال{% else %}غیرفعال{% endif %}</td><td><a class="btn btn-soft" href="{% url 'accounts:service_update' service.id %}">ویرایش</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="9">هنوز خدمتی ثبت نشده است.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

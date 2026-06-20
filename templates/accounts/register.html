@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="section">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">شروع رایگان</span>
+      <h1 class="section-title">صفحه رزرو نوبتک خودت را بساز</h1>
+      <p class="section-desc">بعد از ثبت‌نام، یک صفحه اختصاصی با لینک عمومی ساخته می‌شود و می‌توانی خدمات و ساعت‌های کاری را مدیریت کنی.</p>
+    </div>
+    <form class="form-card" method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        {% for field in form %}
+          <div class="{% if field.name == 'password1' or field.name == 'password2' %}{% else %}{% endif %}">
+            {{ field.label_tag }}{{ field }}
+            {% if field.help_text %}<div class="helptext">{{ field.help_text }}</div>{% endif %}
+            {{ field.errors }}
+          </div>
+        {% endfor %}
+      </div>
+      <button class="btn btn-primary" style="margin-top:18px;width:100%" type="submit">ساخت صفحه رزرو</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

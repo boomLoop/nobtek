@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static nobtek_tags %}
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"{{ business.title|escapejs }}","description":"{{ business.short_description|escapejs }}","address":"{{ business.address|escapejs }}","telephone":"{{ business.phone|escapejs }}"}
+</script>
+{% endblock %}
+{% block content %}
+<section class="business-hero">
+  <div class="container business-head">
+    {% if business.logo %}<img class="business-avatar" src="{{ business.logo.url }}" alt="{{ business.title }}">{% else %}<img class="business-avatar" src="{% static 'assets/nobtek-logo.png' %}" alt="{{ business.title }}">{% endif %}
+    <div>
+      <span class="badge">{% if business.is_verified %}تأیید شده{% else %}صفحه رزرو نوبتک{% endif %}</span>
+      <h1>{{ business.title }}</h1>
+      <p>{{ business.short_description }}</p>
+      <p>{% if business.category %}{{ business.category.name }}{% endif %}{% if business.city %} · {{ business.city }}{% endif %}</p>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container hero-grid" style="align-items:start">
+    <div>
+      <div class="section-head"><div><h2 class="section-title">خدمات قابل رزرو</h2><p class="section-desc">خدمت موردنظر را انتخاب کن و زمان‌های آزاد را ببین.</p></div></div>
+      <div class="service-list">
+        {% for service in services %}
+          <div class="service-item">
+            <div>
+              <h3>{{ service.title }}</h3>
+              <p>{{ service.description|default:'بدون توضیح' }}</p>
+              <p><strong>{{ service.price|toman }}</strong> · {{ service.duration_minutes|duration_label }} · ظرفیت {{ service.capacity|fa_number }}</p>
+            </div>
+            <a class="btn btn-primary" href="{% url 'bookings:create' business.slug service.id %}">رزرو این خدمت</a>
+          </div>
+        {% empty %}<div class="empty">هنوز خدمتی برای رزرو ثبت نشده است.</div>{% endfor %}
+      </div>
+    </div>
+    <aside class="card" style="position:sticky;top:100px">
+      <h3>اطلاعات کسب‌وکار</h3>
+      <p>{{ business.description|default:business.short_description }}</p>
+      {% if business.address %}<p><strong>آدرس:</strong> {{ business.address }}</p>{% endif %}
+      {% if business.phone %}<p><strong>تماس:</strong> {{ business.phone }}</p>{% endif %}
+      {% if business.instagram_url %}<p><a class="btn btn-soft" href="{{ business.instagram_url }}" target="_blank">اینستاگرام</a></p>{% endif %}
+      {% if business.whatsapp_url %}<p><a class="btn btn-soft" href="{{ business.whatsapp_url }}" target="_blank">واتساپ</a></p>{% endif %}
+      <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+      <h3>قوانین رزرو</h3>
+      <p>{{ business.booking_policy|linebreaksbr }}</p>
+      <p>امکان لغو تا {{ business.cancellation_hours|fa_number }} ساعت قبل از رزرو.</p>
+    </aside>
+  </div>
+</section>
+{% endblock %}

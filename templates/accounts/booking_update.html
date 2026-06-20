@@ -1,0 +1,9 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">رزرو {{ booking.tracking_code }}</span><h1 class="section-title">ویرایش وضعیت رزرو</h1><p class="section-desc">{{ booking.customer_name }} برای {{ booking.service.title }} در {{ booking.starts_at|date:'Y/m/d H:i' }}</p></div></div>
+<form class="form-card" method="post">
+  {% csrf_token %}
+  {{ form.status.label_tag }}{{ form.status }}{{ form.status.errors }}
+  <button class="btn btn-primary" style="margin-top:18px" type="submit">ذخیره وضعیت</button>
+</form>
+{% endblock %}

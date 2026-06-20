@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load nobtek_tags %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head"><div><span class="badge">تعرفه‌ها</span><h1 class="section-title">پنل مناسب کسب‌وکارت را انتخاب کن</h1><p class="section-desc">همه پنل‌ها از ادمین قابل مدیریت هستند؛ قیمت، محدودیت‌ها و قابلیت‌ها را هر زمان تغییر بده.</p></div></div>
+    <div class="grid grid-3">
+      {% for plan in plans %}
+        <div class="card pricing-card {% if plan.is_featured %}featured{% endif %}">
+          {% if plan.is_featured %}<span class="badge">محبوب‌ترین انتخاب</span>{% endif %}
+          <h3>{{ plan.name }}</h3>
+          <p>{{ plan.description }}</p>
+          <div class="price">{{ plan.monthly_price|toman }} <small>/ ماهانه</small></div>
+          <ul class="clean">
+            <li>{{ plan.max_services|fa_number }} خدمت قابل تعریف</li>
+            <li>{{ plan.max_bookings_per_month|fa_number }} رزرو ماهانه</li>
+            <li>{{ plan.max_staff|fa_number }} کارمند</li>
+            <li>{{ plan.sms_credit|fa_number }} پیامک ماهانه</li>
+            {% for feature in plan.features.all %}<li>{{ feature.title }}</li>{% endfor %}
+          </ul>
+          <a class="btn {% if plan.is_featured %}btn-primary{% else %}btn-dark{% endif %}" href="{% url 'accounts:register' %}">شروع کن</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static nobtek_tags %}
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"نوبتک","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"پلتفرم ساخت صفحه رزرو آنلاین برای کسب‌وکارها"}
+</script>
+{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">پلتفرم رزرو آنلاین Nobtek</span>
+      <h1>{{ site_setting.hero_title }} <span>در چند دقیقه</span></h1>
+      <p class="lead">{{ site_setting.hero_subtitle }}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{% url 'accounts:register' %}">ساخت صفحه رزرو رایگان</a>
+        <a class="btn btn-ghost" href="{% url 'pages:pricing' %}">مشاهده پنل‌ها</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="booking-mock">
+        <div class="mock-top">
+          <div class="mock-logo">Nb</div>
+          <div>
+            <div class="mock-title">صفحه رزرو نمونه</div>
+            <div class="mock-sub">مشاوره، کلاس، سالن، مکان و هر چیز قابل رزرو</div>
+          </div>
+        </div>
+        <div class="card" style="box-shadow:none;padding:16px">
+          <h3>جلسه مشاوره ۶۰ دقیقه‌ای</h3>
+          <p>انتخاب روز و ساعت آزاد، ثبت مشخصات و دریافت پیام تأیید.</p>
+          <div class="slot-grid">
+            <span class="slot">۱۰:۰۰</span>
+            <span class="slot active">۱۲:۳۰</span>
+            <span class="slot">۱۵:۰۰</span>
+            <span class="slot">۱۶:۳۰</span>
+            <span class="slot active">۱۸:۰۰</span>
+            <span class="slot">۱۹:۱۵</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">برای چه کسب‌وکارهایی مناسب است؟</h2>
+        <p class="section-desc">هر چیزی که زمان، خدمت، ظرفیت یا مکان قابل رزرو داشته باشد، می‌تواند در نوبتک صفحه اختصاصی داشته باشد.</p>
+      </div>
+      <a class="btn btn-soft" href="{% url 'pages:categories' %}">همه دسته‌بندی‌ها</a>
+    </div>
+    <div class="grid grid-4">
+      {% for category in categories %}
+        <div class="card">
+          <div class="icon-card">{{ forloop.counter|fa_number }}</div>
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.description }}</p>
+        </div>
+      {% empty %}
+        <div class="empty">هنوز دسته‌بندی ثبت نشده است.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">منطق رزرو دقیق و قابل اعتماد</h2>
+        <p class="section-desc">هسته نوبتک روی تقویم هوشمند، ظرفیت، مدت‌زمان خدمت، ساعت کاری و جلوگیری از رزرو تکراری ساخته شده است.</p>
+      </div>
+    </div>
+    <div class="grid grid-3">
+      <div class="card"><div class="icon-card">۱</div><h3>صفحه اختصاصی</h3><p>هر کسب‌وکار یک لینک اختصاصی دارد و می‌تواند خدمات، قیمت‌ها، قوانین و اطلاعات تماس را مدیریت کند.</p></div>
+      <div class="card"><div class="icon-card">۲</div><h3>تقویم هوشمند</h3><p>سیستم فقط زمان‌هایی را نشان می‌دهد که واقعاً آزاد هستند و ظرفیت کافی دارند.</p></div>
+      <div class="card"><div class="icon-card">۳</div><h3>مدیریت رزروها</h3><p>صاحب کسب‌وکار رزروها را تأیید، لغو، انجام شده یا عدم حضور ثبت می‌کند.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="plans">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title">پنل‌های نوبتک</h2>
+        <p class="section-desc">از تست رایگان شروع کن و وقتی رزروها جدی شد، پنل را ارتقا بده.</p>
+      </div>
+      <a class="btn btn-soft" href="{% url 'pages:pricing' %}">جزئیات تعرفه‌ها</a>
+    </div>
+    <div class="grid grid-3">
+      {% for plan in plans|slice:':3' %}
+        <div class="card pricing-card {% if plan.is_featured %}featured{% endif %}">
+          {% if plan.is_featured %}<span class="badge">پیشنهادی</span>{% endif %}
+          <h3>{{ plan.name }}</h3>
+          <p>{{ plan.description }}</p>
+          <div class="price">{{ plan.monthly_price|toman }} <small>/ ماهانه</small></div>
+          <ul class="clean">
+            <li>{{ plan.max_services|fa_number }} خدمت</li>
+            <li>{{ plan.max_bookings_per_month|fa_number }} رزرو ماهانه</li>
+            <li>{{ plan.max_staff|fa_number }} کارمند</li>
+            {% if plan.online_payment %}<li>پرداخت آنلاین</li>{% endif %}
+            {% if plan.deposit_payment %}<li>دریافت بیعانه</li>{% endif %}
+          </ul>
+          <a class="btn {% if plan.is_featured %}btn-primary{% else %}btn-ghost{% endif %}" href="{% url 'accounts:register' %}">شروع با این پنل</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% if sample_businesses %}
+<section class="section">
+  <div class="container">
+    <div class="section-head"><div><h2 class="section-title">نمونه صفحات فعال</h2><p class="section-desc">این موارد برای تست اولیه پروژه ثبت شده‌اند و از پنل ادمین قابل مدیریت هستند.</p></div></div>
+    <div class="grid grid-3">
+      {% for business in sample_businesses %}
+      <a class="card" href="{{ business.get_absolute_url }}">
+        <h3>{{ business.title }}</h3>
+        <p>{{ business.category.name|default:'کسب‌وکار قابل رزرو' }}{% if business.city %} در {{ business.city }}{% endif %}</p>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-3">
+      {% for item in testimonials %}
+        <div class="card"><p>«{{ item.quote }}»</p><h3 style="margin-top:16px">{{ item.full_name }}</h3><p>{{ item.role }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head"><div><h2 class="section-title">سوالات پرتکرار</h2></div></div>
+    <div class="grid grid-3">
+      {% for faq in faqs %}
+        <div class="card"><h3>{{ faq.question }}</h3><p>{{ faq.answer }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

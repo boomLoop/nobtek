@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:520px">
+    <form class="form-card" method="post">
+      {% csrf_token %}
+      <span class="badge">ورود</span>
+      <h1 class="section-title" style="font-size:32px;margin:12px 0 20px">ورود به پنل نوبتک</h1>
+      {% for field in form %}
+        <div style="margin-bottom:14px">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+      {% endfor %}
+      {{ form.non_field_errors }}
+      <button class="btn btn-primary" style="width:100%" type="submit">ورود</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

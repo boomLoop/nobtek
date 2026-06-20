@@ -1,0 +1,16 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">تنظیمات</span><h1 class="section-title">تنظیمات صفحه کسب‌وکار</h1><p class="section-desc">اطلاعات عمومی، تصاویر، قوانین رزرو و لینک‌های ارتباطی را مدیریت کن.</p></div></div>
+<form class="form-card" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="form-grid">
+    {% for field in form %}
+      <div class="{% if field.name == 'description' or field.name == 'booking_policy' or field.name == 'cover' or field.name == 'logo' %}full{% endif %}">
+        {{ field.label_tag }}{{ field }}{{ field.errors }}
+        {% if field.help_text %}<div class="helptext">{{ field.help_text }}</div>{% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  <button class="btn btn-primary" style="margin-top:18px" type="submit">ذخیره تغییرات</button>
+</form>
+{% endblock %}

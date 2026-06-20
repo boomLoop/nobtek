@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load nobtek_tags %}
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:760px">
+    <div class="form-card">
+      <span class="badge">کد پیگیری {{ booking.tracking_code }}</span>
+      <h1 class="section-title" style="font-size:34px;margin-top:14px">جزئیات رزرو</h1>
+      <p class="section-desc">وضعیت فعلی رزرو: <span class="status {{ booking.status }}">{{ booking.get_status_display }}</span></p>
+      <div class="grid grid-3" style="margin:20px 0">
+        <div class="stat"><span>کسب‌وکار</span><strong style="font-size:18px">{{ booking.business.title }}</strong></div>
+        <div class="stat"><span>خدمت</span><strong style="font-size:18px">{{ booking.service.title }}</strong></div>
+        <div class="stat"><span>زمان</span><strong style="font-size:18px">{{ booking.starts_at|date:'Y/m/d H:i' }}</strong></div>
+      </div>
+      <p><strong>نام مشتری:</strong> {{ booking.customer_name }}</p>
+      <p><strong>موبایل:</strong> {{ booking.customer_phone }}</p>
+      {% if booking.staff %}<p><strong>ارائه‌دهنده:</strong> {{ booking.staff.full_name }}</p>{% endif %}
+      <p><strong>مبلغ قابل پرداخت:</strong> {{ booking.payable_amount|toman }}</p>
+      {% if booking.status == 'awaiting_payment' and booking.payable_amount > 0 %}
+        <form method="post" action="{% url 'bookings:pay_demo' booking.tracking_code %}" style="margin-top:14px">
+          {% csrf_token %}
+          <button class="btn btn-primary" type="submit">پرداخت آزمایشی و قطعی کردن رزرو</button>
+        </form>
+      {% endif %}
+      {% if booking.can_be_cancelled_by_customer %}
+        <form method="post" action="{% url 'bookings:cancel' booking.tracking_code %}" style="margin-top:14px">
+          {% csrf_token %}
+          <input type="hidden" name="token" value="{{ cancel_token }}">
+          <button class="btn btn-ghost" type="submit" onclick="return confirm('از لغو این رزرو مطمئن هستید؟')">لغو رزرو</button>
+        </form>
+      {% endif %}
+      <a class="btn btn-soft" style="margin-top:14px" href="{{ booking.business.get_absolute_url }}">بازگشت به صفحه کسب‌وکار</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

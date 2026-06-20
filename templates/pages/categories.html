@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load nobtek_tags %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head"><div><span class="badge">دسته‌بندی‌ها</span><h1 class="section-title">هر چیزی که قابل رزرو است</h1><p class="section-desc">دسته‌بندی‌ها از پنل ادمین مدیریت می‌شوند و برای نمایش بهتر صفحات کسب‌وکار کاربرد دارند.</p></div></div>
+    <div class="grid grid-4">
+      {% for category in categories %}
+      <div class="card"><div class="icon-card">{{ forloop.counter|fa_number }}</div><h3>{{ category.name }}</h3><p>{{ category.description }}</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

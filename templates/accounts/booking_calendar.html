@@ -1,0 +1,25 @@
+{% extends 'dashboard_base.html' %}
+{% load nobtek_tags %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">تقویم</span><h1 class="section-title">تقویم ۳۰ روز آینده</h1><p class="section-desc">رزروهای آینده را روزبه‌روز ببین.</p></div></div>
+<div class="calendar-grid">
+  {% for day in days %}
+    <div class="calendar-day">
+      <strong>{{ day.date|date:'Y/m/d' }}</strong>
+      {% if day.bookings %}
+        <div class="calendar-bookings">
+          {% for booking in day.bookings %}
+            <a class="calendar-booking" href="{% url 'accounts:booking_update' booking.id %}">
+              <span>{{ booking.starts_at|date:'H:i' }} · {{ booking.service.title }}</span>
+              <small>{{ booking.customer_name }}{% if booking.staff %} · {{ booking.staff.full_name }}{% endif %}</small>
+              <em class="status {{ booking.status }}">{{ booking.get_status_display }}</em>
+            </a>
+          {% endfor %}
+        </div>
+      {% else %}
+        <span class="muted">بدون رزرو</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

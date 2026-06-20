@@ -1,0 +1,29 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head">
+  <div>
+    <span class="badge">کارمندها</span>
+    <h1 class="section-title">ارائه‌دهنده‌ها و کارمندها</h1>
+    <p class="section-desc">برای هر خدمت می‌توانی یک ارائه‌دهنده مشخص کنی تا تداخل زمانی او کنترل شود.</p>
+  </div>
+  <a class="btn btn-primary" href="{% url 'accounts:staff_create' %}">افزودن کارمند</a>
+</div>
+{% if plan %}<div class="card" style="margin-bottom:16px">پلن فعلی اجازه ثبت {{ plan.max_staff }} کارمند را می‌دهد.</div>{% endif %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>نام</th><th>سمت</th><th>موبایل</th><th>وضعیت</th><th>ترتیب</th><th></th></tr></thead>
+    <tbody>
+      {% for staff in staff_members %}
+      <tr>
+        <td>{{ staff.full_name }}</td>
+        <td>{{ staff.role|default:'—' }}</td>
+        <td>{{ staff.phone|default:'—' }}</td>
+        <td>{% if staff.is_active %}فعال{% else %}غیرفعال{% endif %}</td>
+        <td>{{ staff.order }}</td>
+        <td><a class="btn btn-soft" href="{% url 'accounts:staff_update' staff.id %}">ویرایش</a></td>
+      </tr>
+      {% empty %}<tr><td colspan="6">هنوز کارمندی ثبت نشده است.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

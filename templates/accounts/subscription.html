@@ -1,0 +1,15 @@
+{% extends 'dashboard_base.html' %}
+{% load nobtek_tags %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">اشتراک</span><h1 class="section-title">پنل فعلی و ارتقا</h1>{% if current %}<p class="section-desc">پنل فعلی شما: {{ current.plan.name }}</p>{% endif %}</div></div>
+<div class="grid grid-3">
+  {% for plan in plans %}
+  <div class="card pricing-card {% if current and current.plan_id == plan.id %}featured{% endif %}">
+    {% if current and current.plan_id == plan.id %}<span class="badge">پنل فعلی</span>{% endif %}
+    <h3>{{ plan.name }}</h3><div class="price">{{ plan.monthly_price|toman }}</div><p>{{ plan.description }}</p>
+    <ul class="clean"><li>{{ plan.max_services|fa_number }} خدمت</li><li>{{ plan.max_bookings_per_month|fa_number }} رزرو</li><li>{{ plan.max_staff|fa_number }} کارمند</li></ul>
+    <button class="btn btn-ghost" type="button">ارتقا در نسخه پرداخت واقعی</button>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

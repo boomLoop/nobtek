@@ -1,0 +1,89 @@
+{% load static %}
+{% load nobtek_tags %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ meta_title|default:site_setting.site_name }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ meta_description|default:site_setting.meta_description }}{% endblock %}">
+  <meta name="robots" content="{{ meta_robots|default:'index, follow' }}">
+  <meta property="og:title" content="{% block og_title %}{{ meta_title|default:site_setting.site_name }}{% endblock %}">
+  <meta property="og:description" content="{{ meta_description|default:site_setting.meta_description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fa_IR">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  <link rel="icon" href="{% static 'assets/nobtek-logo.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <header class="header">
+    <div class="container navbar">
+      <a class="brand" href="{% url 'pages:home' %}" aria-label="نوبتک">
+        <img class="brand-logo" src="{% static 'assets/nobtek-logo.png' %}" alt="لوگوی نوبتک">
+        <span>{{ site_setting.site_name|default:'نوبتک' }}</span>
+      </a>
+      <nav class="nav-links" aria-label="ناوبری اصلی">
+        <a href="{% url 'pages:home' %}">خانه</a>
+        <a href="{% url 'pages:categories' %}">دسته‌بندی‌ها</a>
+        <a href="{% url 'pages:pricing' %}">تعرفه‌ها</a>
+        <a href="{% url 'pages:contact' %}">تماس</a>
+      </nav>
+      <div class="nav-actions">
+        {% if request.user.is_authenticated %}
+          <a class="btn btn-ghost" href="{% url 'accounts:dashboard' %}">داشبورد</a>
+        {% else %}
+          <a class="btn btn-ghost" href="{% url 'accounts:login' %}">ورود</a>
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}">ساخت صفحه رایگان</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  {% if messages %}
+    <div class="alerts">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="{% url 'pages:home' %}" style="color:white">
+            <img class="brand-logo" src="{% static 'assets/nobtek-logo.png' %}" alt="نوبتک">
+            <span>{{ site_setting.site_name }}</span>
+          </a>
+          <p>{{ site_setting.tagline }}</p>
+          <p>نوبتک برای هر کسب‌وکار یک لینک رزرو آنلاین می‌سازد؛ از خدمات شخصی تا کلاس، مکان، سالن و مشاوره.</p>
+        </div>
+        <div>
+          <h3>دسترسی سریع</h3>
+          <p><a href="{% url 'pages:pricing' %}">تعرفه‌ها</a></p>
+          <p><a href="{% url 'pages:categories' %}">دسته‌بندی‌ها</a></p>
+          <p><a href="{% url 'accounts:register' %}">ساخت صفحه رزرو</a></p>
+        </div>
+        <div>
+          <h3>ارتباط</h3>
+          {% if site_setting.contact_phone %}<p>{{ site_setting.contact_phone }}</p>{% endif %}
+          {% if site_setting.contact_email %}<p>{{ site_setting.contact_email }}</p>{% endif %}
+          <p><a href="{% url 'pages:contact' %}">ارسال پیام</a></p>
+        </div>
+      </div>
+      <div class="footer-bottom">© {% now 'Y' %} Nobtek. همه حقوق محفوظ است.</div>
+    </div>
+  </footer>
+  <script src="{% static 'js/main.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

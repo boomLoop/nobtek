@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load nobtek_tags %}
+{% block content %}
+<div class="container dashboard">
+  <aside class="sidebar">
+    <a href="{% url 'accounts:dashboard' %}">داشبورد</a>
+    <a href="{% url 'accounts:business_settings' %}">تنظیمات صفحه</a>
+    <a href="{% url 'accounts:services' %}">خدمات</a>
+    <a href="{% url 'accounts:staff' %}">کارمندها</a>
+    <a href="{% url 'accounts:working_hours' %}">ساعت کاری</a>
+    <a href="{% url 'accounts:time_blocks' %}">بستن زمان</a>
+    <a href="{% url 'accounts:bookings' %}">رزروها</a>
+    <a href="{% url 'accounts:calendar' %}">تقویم</a>
+    <a href="{% url 'accounts:reports' %}">گزارش‌ها</a>
+    <a href="{% url 'accounts:subscription' %}">پنل و اشتراک</a>
+    {% if request.user.business %}<a href="{{ request.user.business.get_absolute_url }}" target="_blank">مشاهده صفحه عمومی</a>{% endif %}
+    <form method="post" action="{% url 'accounts:logout' %}" style="margin-top:16px">{% csrf_token %}<button class="btn btn-ghost" type="submit" style="width:100%">خروج</button></form>
+  </aside>
+  <section class="content-panel">
+    {% block dashboard_content %}{% endblock %}
+  </section>
+</div>
+{% endblock %}

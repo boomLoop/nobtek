@@ -1,0 +1,37 @@
+{% extends 'dashboard_base.html' %}
+{% load nobtek_tags %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">گزارش‌ها</span><h1 class="section-title">گزارش ماه جاری</h1><p class="section-desc">نمای کلی عملکرد رزرو و درآمد کسب‌وکار.</p></div></div>
+<div class="stat-grid">
+  <div class="stat"><span>کل رزروهای ماه</span><strong>{{ totals.all|fa_number }}</strong></div>
+  <div class="stat"><span>درآمد پرداخت‌شده</span><strong>{{ totals.paid_income|toman }}</strong></div>
+  <div class="stat"><span>لغوشده</span><strong>{{ totals.cancelled|fa_number }}</strong></div>
+  <div class="stat"><span>عدم حضور</span><strong>{{ totals.no_show|fa_number }}</strong></div>
+</div>
+<div class="grid grid-2" style="margin-top:20px">
+  <div class="card">
+    <h3>وضعیت رزروها</h3>
+    <div class="mini-report">
+      {% for row in status_summary %}
+        <div><span>{{ row.label }}</span><strong>{{ row.total|fa_number }}</strong></div>
+      {% empty %}<p>داده‌ای برای این ماه وجود ندارد.</p>{% endfor %}
+    </div>
+  </div>
+  <div class="card">
+    <h3>خدمات محبوب</h3>
+    <div class="mini-report">
+      {% for row in service_summary %}
+        <div><span>{{ row.service__title|default:'—' }}</span><strong>{{ row.total|fa_number }} رزرو</strong></div>
+      {% empty %}<p>داده‌ای برای این ماه وجود ندارد.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+<div class="card" style="margin-top:20px">
+  <h3>تعداد رزرو بر اساس روز</h3>
+  <div class="mini-report">
+    {% for row in day_summary %}
+      <div><span>{{ row.day|date:'Y/m/d' }}</span><strong>{{ row.total|fa_number }}</strong></div>
+    {% empty %}<p>داده‌ای برای این ماه وجود ندارد.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

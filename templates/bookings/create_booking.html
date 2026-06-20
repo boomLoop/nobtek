@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load nobtek_tags %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "{{ service.title|escapejs }}",
+  "provider": {
+    "@type": "LocalBusiness",
+    "name": "{{ business.title|escapejs }}"
+  },
+  "areaServed": "{{ business.city|default:'ایران'|escapejs }}",
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ service.price }}",
+    "priceCurrency": "IRR",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<section class="booking-page section">
+  <div class="container">
+    <div class="booking-topline">
+      <div>
+        <span class="badge booking-badge">رزرو آنلاین {{ business.title }}</span>
+        <h1 class="section-title booking-title">{{ service.title }}</h1>
+        <p class="section-desc booking-desc">{{ service.description|default:'یک زمان مناسب انتخاب کنید؛ بعد اطلاعات تماس را وارد کنید تا رزرو شما ثبت شود.' }}</p>
+      </div>
+      <a class="btn btn-ghost booking-back" href="{{ business.get_absolute_url }}">بازگشت به صفحه کسب‌وکار</a>
+    </div>
+
+    <form class="booking-layout" method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="booking-main-card">
+        <div class="booking-step-head">
+          <span class="step-number">۱</span>
+          <div>
+            <h2>انتخاب روز و ساعت</h2>
+            <p>تاریخ‌ها بر اساس تقویم ایران نمایش داده می‌شوند. فقط زمان‌های واقعاً آزاد قابل انتخاب هستند.</p>
+          </div>
+        </div>
+
+        {% if slot_days %}
+          <div class="date-strip" role="tablist" aria-label="انتخاب روز رزرو">
+            {% for day in slot_days %}
+              <button
+                class="date-tab {% if day.key == selected_day_key %}active{% endif %}"
+                type="button"
+                data-day-tab="{{ day.key }}"
+                aria-controls="day-panel-{{ day.key }}"
+                aria-selected="{% if day.key == selected_day_key %}true{% else %}false{% endif %}"
+              >
+                <span class="date-tab-weekday">{{ day.weekday }}</span>
+                <strong>{{ day.short_date }}</strong>
+                <small>{{ day.count_label }} زمان آزاد</small>
+              </button>
+            {% endfor %}
+          </div>
+
+          {{ form.slot.errors }}
+
+          <div class="day-panels">
+            {% for day in slot_days %}
+              <div
+                class="day-panel {% if day.key == selected_day_key %}active{% endif %}"
+                id="day-panel-{{ day.key }}"
+                data-day-panel="{{ day.key }}"
+                {% if day.key != selected_day_key %}hidden{% endif %}
+              >
+                <div class="day-panel-title">
+                  <div>
+                    <span>زمان‌های آزاد</span>
+                    <strong>{{ day.full_date }}</strong>
+                  </div>
+                  <small>{{ day.count_label }} انتخاب در دسترس</small>
+                </div>
+
+                {% for period in day.periods %}
+                  <div class="time-period">
+                    <h3>{{ period.title }}</h3>
+                    <div class="time-grid" role="radiogroup" aria-label="زمان‌های {{ period.title }}">
+                      {% for item in period.slots %}
+                        <label class="time-card">
+                          <input
+                            type="radio"
+                            name="slot"
+                            value="{{ item.value }}"
+                            {% if item.value == selected_slot %}checked{% endif %}
+                            required
+                          >
+                          <span class="slot-time-content">
+                            <strong>{{ item.start_time }}</strong>
+                            <small>تا {{ item.end_time }}</small>
+                          </span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty booking-empty">
+            <strong>فعلاً زمان آزادی برای این خدمت وجود ندارد.</strong>
+            <span>لطفاً بعداً دوباره بررسی کنید یا با کسب‌وکار تماس بگیرید.</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <aside class="booking-side">
+        <div class="booking-summary-card">
+          <div class="summary-icon">Nb</div>
+          <h3>جزئیات خدمت</h3>
+          <div class="summary-list">
+            <div><span>قیمت</span><strong>{{ service.price|toman }}</strong></div>
+            <div><span>مدت‌زمان</span><strong>{{ service.duration_minutes|duration_label }}</strong></div>
+            <div><span>نوع پرداخت</span><strong>{{ service.get_payment_mode_display }}</strong></div>
+            {% if service.needs_payment %}
+              <div class="summary-pay"><span>مبلغ قابل پرداخت</span><strong>{{ service.required_payment_amount|toman }}</strong></div>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if slot_days %}
+          <div class="booking-info-card">
+            <div class="booking-step-head compact">
+              <span class="step-number">۲</span>
+              <div>
+                <h2>اطلاعات رزرو</h2>
+                <p>بعد از ثبت، کد پیگیری دریافت می‌کنید.</p>
+              </div>
+            </div>
+
+            <div class="form-grid booking-customer-grid">
+              <div>{{ form.customer_name.label_tag }}{{ form.customer_name }}{{ form.customer_name.errors }}</div>
+              <div>{{ form.customer_phone.label_tag }}{{ form.customer_phone }}{{ form.customer_phone.errors }}</div>
+              <div class="full">{{ form.customer_email.label_tag }}{{ form.customer_email }}{{ form.customer_email.errors }}</div>
+              <div class="full">{{ form.notes.label_tag }}{{ form.notes }}{{ form.notes.errors }}</div>
+              <div class="full policy-check">
+                <label>
+                  {{ form.accept_policy }}
+                  <span>{{ form.accept_policy.label }}</span>
+                </label>
+                {{ form.accept_policy.errors }}
+              </div>
+            </div>
+
+            <details class="policy-box">
+              <summary>مشاهده قوانین رزرو</summary>
+              <p>{{ business.booking_policy|linebreaksbr }}</p>
+            </details>
+
+            <button class="btn btn-primary booking-submit" type="submit">ثبت رزرو</button>
+            <p class="secure-note">اطلاعات شما فقط برای ثبت و پیگیری همین رزرو استفاده می‌شود.</p>
+          </div>
+        {% endif %}
+      </aside>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const tabs = document.querySelectorAll('[data-day-tab]');
+  const panels = document.querySelectorAll('[data-day-panel]');
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.dayTab;
+      tabs.forEach((item) => {
+        const active = item.dataset.dayTab === target;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      panels.forEach((panel) => {
+        const active = panel.dataset.dayPanel === target;
+        panel.classList.toggle('active', active);
+        panel.hidden = !active;
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

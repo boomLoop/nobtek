@@ -1,0 +1,25 @@
+{% extends 'dashboard_base.html' %}
+{% block dashboard_content %}
+<div class="section-head"><div><span class="badge">تقویم</span><h1 class="section-title">ساعت‌های کاری</h1><p class="section-desc">تقویم رزرو فقط زمان‌هایی را نمایش می‌دهد که اینجا باز باشند و با رزرو دیگری تداخل نداشته باشند.</p></div></div>
+<form class="form-card" method="post">
+  {% csrf_token %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>روز</th><th>باز است</th><th>شروع</th><th>پایان</th><th>شروع استراحت</th><th>پایان استراحت</th></tr></thead>
+      <tbody>
+        {% for wh in hours %}
+        <tr>
+          <td>{{ wh.get_weekday_display }}</td>
+          <td><input type="checkbox" name="day_{{ wh.weekday }}_is_open" {% if wh.is_open %}checked{% endif %}></td>
+          <td><input type="time" name="day_{{ wh.weekday }}_opens_at" value="{{ wh.opens_at|time:'H:i' }}"></td>
+          <td><input type="time" name="day_{{ wh.weekday }}_closes_at" value="{{ wh.closes_at|time:'H:i' }}"></td>
+          <td><input type="time" name="day_{{ wh.weekday }}_break_starts_at" value="{{ wh.break_starts_at|time:'H:i' }}"></td>
+          <td><input type="time" name="day_{{ wh.weekday }}_break_ends_at" value="{{ wh.break_ends_at|time:'H:i' }}"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <button class="btn btn-primary" style="margin-top:18px" type="submit">ذخیره ساعت کاری</button>
+</form>
+{% endblock %}

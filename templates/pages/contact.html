@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="section">
+  <div class="container hero-grid">
+    <div>
+      <span class="badge">تماس با نوبتک</span>
+      <h1 class="section-title">برای شروع یا همکاری پیام بده</h1>
+      <p class="section-desc">پیام‌ها داخل پنل ادمین ذخیره می‌شوند و قابل مدیریت هستند.</p>
+    </div>
+    <form class="form-card" method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        {% for field in form %}
+          <div class="{% if field.name == 'message' %}full{% endif %}">
+            {{ field.label_tag }}{{ field }}{{ field.errors }}
+          </div>
+        {% endfor %}
+      </div>
+      <button class="btn btn-primary" style="margin-top:16px" type="submit">ارسال پیام</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
