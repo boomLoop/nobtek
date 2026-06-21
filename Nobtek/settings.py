@@ -28,8 +28,16 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = env_bool("DJANGO_DEBUG", True)
 
-ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost,testserver")
-CSRF_TRUSTED_ORIGINS = env_list("DJANGO_CSRF_TRUSTED_ORIGINS", "")
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "nobtek.ir",
+    "www.nobtek.ir",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://nobtek.ir",
+    "https://www.nobtek.ir",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
